@@ -1,4 +1,9 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import Controller.SocialMediaController;
+import Util.ConnectionUtil;
 import io.javalin.Javalin;
 
 /**
@@ -10,5 +15,9 @@ public class Main {
         SocialMediaController controller = new SocialMediaController();
         Javalin app = controller.startAPI();
         app.start(8080);
-    }
+       
+     }
+
+   
+
 }
