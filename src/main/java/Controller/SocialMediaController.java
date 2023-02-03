@@ -1,7 +1,5 @@
 package Controller;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,7 +36,7 @@ public class SocialMediaController {
         
         app.get("/register",this::getAllRegisteredHandler);
         app.post("/register",this::postRegisterHandler);
-        app.post("/login", this::postLoginHandler);
+        // app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
@@ -60,31 +58,31 @@ public class SocialMediaController {
         Account createdAcc = accountService.addAccount(account);
         // ctx.json(mapObj.writeValueAsString(createdAcc));
 
-        if(createdAcc!=null){
-            ctx.json(mapObj.writeValueAsString(createdAcc));
-            
-        }
-        else{
+        if(createdAcc==null){
             ctx.status(400);
             
         }
-    }
-
-    private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
-        ObjectMapper mapObj = new ObjectMapper();
-        Account readlogin = mapObj.readValue(ctx.body(),Account.class);
-        // String conUser = ctx.pathParam("username");
-        // String conPass = ctx.pathParam("password");
-        // Account combo = new Account(conUser,conPass);
-        Account readServiceAcc = accountService.userLogin(readlogin.getUsername(), readlogin.getPassword());
-
-        if(readServiceAcc== null){
-            ctx.json(mapObj.writeValueAsString(readServiceAcc));
-        }
         else{
-            ctx.status(401);
+            ctx.json(mapObj.writeValueAsString(createdAcc));
+            
         }
     }
+
+    // private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
+    //     ObjectMapper mapObj = new ObjectMapper();
+    //     Account readlogin = mapObj.readValue(ctx.body(),Account.class);
+    //     // String conUser = ctx.pathParam("username");
+    //     // String conPass = ctx.pathParam("password");
+    //     // Account combo = new Account(conUser,conPass);
+    //     Account readServiceAcc = accountService.userLogin(readlogin.getUsername(), readlogin.getPassword());
+
+    //     if(readServiceAcc== null){
+    //         ctx.json(mapObj.writeValueAsString(readServiceAcc));
+    //     }
+    //     else{
+    //         ctx.status(401);
+    //     }
+    // }
 
     // private void getLoginHandler(Context ctx) throws JsonProcessingException{
     //     ctx.json(accountService.userLogin(ctx.pathParam("username"), ctx.pathParam("password")));
@@ -95,11 +93,11 @@ public class SocialMediaController {
         Message message = mapObj.readValue(ctx.body(), Message.class);
         Message readMessage = messageService.addMessage(message);
 
-        if(readMessage != null){
-            ctx.json(mapObj.writeValueAsString(readMessage));
+        if(readMessage == null){
+           ctx.status(400);
         }
         else{
-            ctx.status(400);
+            ctx.json(mapObj.writeValueAsString(readMessage));
         }
     }
     
@@ -113,13 +111,42 @@ public class SocialMediaController {
         ctx.json(messageService.getMessageById(messId));
     }
     
+    //if message existed the response body should contain now deleted message. the response 
+    //status should be 200
+    //if the message did not exist the response should be 200, but the response body should be empty.
     private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
+        // int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
+        // ctx.json(deleteId);
+        ObjectMapper obj = new ObjectMapper(); 
+        Message message = obj.readValue(ctx.body(), Message.class);
         int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
-        ctx.json(deleteId);
+        Message delet = messageService.del(deleteId,message);
+
+        if(delet == null){
+            ctx.status(200);
+        }
+        else{
+            ctx.json(obj.writeValueAsString(delet));
+        }
     }
 
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
+        ObjectMapper objMapper = new ObjectMapper();
+        Message message = objMapper.readValue(ctx.body(), Message.class);
 
+        ctx.contentType("application/Json");
+
+        int messId = Integer.parseInt(ctx.pathParam("message_id"));
+        Message updatedMessages = messageService.updateMessage(messId, message);
+        
+        if(updatedMessages == null){
+            // ctx.json(objMapper.writeValueAsString(updatedMessages));
+            ctx.status(400);
+        }
+        else{
+            ctx.json(objMapper.writeValueAsString(updatedMessages));
+
+        }
     }
 
 }

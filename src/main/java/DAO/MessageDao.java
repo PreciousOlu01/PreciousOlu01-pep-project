@@ -1,7 +1,5 @@
 package DAO;
 
-import static org.mockito.ArgumentMatchers.nullable;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
