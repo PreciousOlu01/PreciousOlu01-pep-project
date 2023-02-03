@@ -47,12 +47,26 @@ public class ServiceAccount{
     //     }
     // }
 
-    // public Account userLogin(String username, String password){
-    //    Account account = accountDao.getUserNameAndPassword(username, password);
-    //     if(account == username && account==password){
-    //         return accountDao.getUserNameAndPassword(username,password);
-    //     }
-    //     return null;
-    // }
+    public Account userLogin(String username, String password){
+       Account accountExist = accountDao.getUserNameAndPassword(username, password);
+       if(username == null && password == null){
+            if(accountExist != null){
+                return accountDao.getAccountByUserName(username);
+            }
+       }
+       return null;     
+    }
+    
+    // public Account userLogin(Account account){
+    //     Account match = null;
+    //     Account accountExist = accountDao.getAccountByUserName(account.getUsername());
+        
+    //      if(accountExist.getUsername().equals(account.username) && accountExist.getPassword().equals(account.password)){
+    //          match = accountExist;
+    //      }
+    //      return match;
+    //  }
+
+   
 
 }
