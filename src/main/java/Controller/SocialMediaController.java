@@ -1,5 +1,7 @@
 package Controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,32 +32,29 @@ public class SocialMediaController {
         
         app.get("/register",this::getAllRegisteredHandler);
         app.post("/register",this::postRegisterHandler);
-        app.post("/login", this::postLoginHandler);
+        // app.post("/login", this::postLoginHandler);
 
         return app;
     }
     
     private void getAllRegisteredHandler(Context ctx) throws JsonProcessingException{
-        ObjectMapper mapObj = new ObjectMapper();
-        Account readAcc = mapObj.readValue(ctx.body(), Account.class);
-        Account getAccount = accountService.allAccounts(readAcc);
-        String strAccObj = mapObj.writeValueAsString(readAcc);
-        ctx.result(strAccObj);
+        List<Account>accounts= accountService.allAccounts();
+        ctx.json(accounts);
     }
 
     private void postRegisterHandler(Context ctx)throws JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
         Account account = mapObj.readValue(ctx.body(), Account.class);
         Account createdAcc = accountService.addAccount(account);
-        ctx.json(mapObj.writeValueAsString(createdAcc));
+        // ctx.json(mapObj.writeValueAsString(createdAcc));
 
-        // if(createdAcc==null){
-        //     ctx.json(mapObj.writeValueAsString(createdAcc));
-        // }
-        // else{
-        //     ctx.status(400);
+        if(createdAcc!=null){
+            ctx.json(mapObj.writeValueAsString(createdAcc));
+        }
+        else{
+            ctx.status(400);
             
-        // }
+        }
     }
 
     // private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
