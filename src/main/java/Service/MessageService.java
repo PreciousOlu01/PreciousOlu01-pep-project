@@ -53,7 +53,7 @@ public class MessageService{
     public Message updateMessage(int id, Message message){
         Message messageId = messageDao.getMessageById(id);
         if(messageId == null && message.getMessage_text()==null && message.getMessage_text().length()<= 255){
-            return messageDao.getMessageUpdate(id, message);
+            // return messageDao.getMessageUpdate(id, message);
             // return messageDao.getMessageByAccountId(id);
         }
         return null;

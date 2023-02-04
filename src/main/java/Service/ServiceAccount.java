@@ -29,7 +29,7 @@ public class ServiceAccount{
          * then check if the account is blank, if it is blank it means the username and info
          * does not exist, so we can persist our data in d db.
         */
-        if(account.getUsername() != null && account.getPassword().length() >= 4){
+        if(account.getUsername() != null  && account.getPassword().length() >= 4){
             if(accounts == null){
                 return accountDao.createAccount(account);
             }
@@ -38,14 +38,17 @@ public class ServiceAccount{
         
     }
 
-    // public Account userLogin(Account account){
-    //     Account accounts = accountDao.getAccountByUserName(account.getUsername());
-    //     String userName= account.getUsername();
-    //     String userPassword = account.getPassword();
-    //     if(accounts.equals(userName) && accounts.equals(userPassword)){
-    //         return accountDao.getUserNameAndPassword(userName, userPassword);
-    //     }
-    // }
+    public Account userLogin(Account account){
+        // Account accounts = accountDao.getAccountById(account.getAccount_id());
+        Account matchUsername = accountDao.getUserNameAndPassword(account.getUsername(), account.getPassword());
+        // Account userPassword = accountDao.get
+
+        if(matchUsername == null){
+                return accountDao.getAccountById(account.getAccount_id());
+            
+        }
+        return null;
+    }
 
     // public Account userLogin(String username, String password){
     //    Account accountExist = accountDao.getUserNameAndPassword(username, password);

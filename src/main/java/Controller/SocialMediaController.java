@@ -36,7 +36,7 @@ public class SocialMediaController {
         
         app.get("/register",this::getAllRegisteredHandler);
         app.post("/register",this::postRegisterHandler);
-        // app.post("/login", this::postLoginHandler);
+        app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
@@ -56,7 +56,6 @@ public class SocialMediaController {
         ObjectMapper mapObj = new ObjectMapper();
         Account account = mapObj.readValue(ctx.body(), Account.class);
         Account createdAcc = accountService.addAccount(account);
-        // ctx.json(mapObj.writeValueAsString(createdAcc));
 
         if(createdAcc==null){
             ctx.status(400);
@@ -68,21 +67,18 @@ public class SocialMediaController {
         }
     }
 
-    // private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
-    //     ObjectMapper mapObj = new ObjectMapper();
-    //     Account readlogin = mapObj.readValue(ctx.body(),Account.class);
-    //     // String conUser = ctx.pathParam("username");
-    //     // String conPass = ctx.pathParam("password");
-    //     // Account combo = new Account(conUser,conPass);
-    //     Account readServiceAcc = accountService.userLogin(readlogin.getUsername(), readlogin.getPassword());
+    private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
+        ObjectMapper mapObj = new ObjectMapper();
+        Account readlogin = mapObj.readValue(ctx.body(),Account.class);
+        Account readServiceAcc = accountService.userLogin(readlogin);
 
-    //     if(readServiceAcc== null){
-    //         ctx.json(mapObj.writeValueAsString(readServiceAcc));
-    //     }
-    //     else{
-    //         ctx.status(401);
-    //     }
-    // }
+        if(readServiceAcc== null){
+            ctx.status(401);
+        }
+        else{
+            ctx.json(mapObj.writeValueAsString(readServiceAcc));
+        }
+    }
 
     // private void getLoginHandler(Context ctx) throws JsonProcessingException{
     //     ctx.json(accountService.userLogin(ctx.pathParam("username"), ctx.pathParam("password")));
