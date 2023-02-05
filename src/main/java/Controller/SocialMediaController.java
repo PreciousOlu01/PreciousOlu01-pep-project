@@ -99,21 +99,14 @@ public class SocialMediaController {
         }
     }
     
-    private void getAllMessagesHandler(Context ctx) throws JsonMappingException{
-        // List<Message>messages = messageService.getMessages();
-        // ctx.json(messages);
-
-        // if(messages == null){
-        //     ctx.status(200);
-        // }
-        // else{
-        //     ctx.json(messages);
-        // }
+    private void getAllMessagesHandler(Context ctx){
+        List<Message>messages = messageService.getMessages();
+        ctx.json(messages); 
     }
 
-    private void getMessageByIdHandler(Context ctx) throws JsonProcessingException{
+    private void getMessageByIdHandler(Context ctx) {
         int messId = Integer.parseInt(ctx.pathParam("message_id"));
-        ctx.json(messageService.getMessageById(messId));
+        ctx.json(messageService.getOneMessageById(messId));                 //change made
     }
     
     //if message existed the response body should contain now deleted message. the response 
@@ -145,12 +138,15 @@ public class SocialMediaController {
         int messId = Integer.parseInt(ctx.pathParam("message_id"));
         Message updatedMessages = messageService.updateMessage(messId, message);
         
+        System.out.println(updatedMessages);          //change made
         if(updatedMessages == null){
             // ctx.json(objMapper.writeValueAsString(updatedMessages));
             ctx.status(400);
         }
         else{
-            ctx.json(objMapper.writeValueAsString(updatedMessages));
+            ctx.json(objMapper.writeValueAsString(updatedMessages));    //changes made
+            // String convertStr = objMapper.writeValueAsString(updatedMessages);
+            // ctx.result(convertStr);
 
         }
     }

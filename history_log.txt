@@ -1,7 +1,8 @@
-commit 852a46f1587e025ac597e5b37e78e96fd747d42e
+commit a6a8eb9ac0a2e45d26b14185944bad4c5e3a3fe1
 Author: PreciousOlu01 <prcsolusegun@gmail.com>
-Date:   Sat Feb 4 21:41:42 2023 +0000
+Date:   Sun Feb 5 05:47:01 2023 +0000
 
-    changes on accountService
+    changes made to messageservice class
+    and accountService class
 
- 5 files changed, 95 insertions(+), 312 deletions(-)
+ 7 files changed, 185 insertions(+), 243 deletions(-)

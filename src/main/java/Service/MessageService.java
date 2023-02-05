@@ -18,35 +18,10 @@ public class MessageService{
         this.messageDao = messageDao;
     }
 
-    // public List<Message>getMessages(){
-    //     List<Message> listMessages = new ArrayList<>();
-    //     listMessages = messageDao.getAlltMessage();
-    //     // Message message = messageDao.getMessageById(get)
-    //     for(Message msg : listMessages){
-    //         if (msg == null){
-    //             return null;
-    //         }
-    //     }
-    //     return messageDao.getAlltMessage();
-    // }
-
+    //get all messages
     public List<Message>getMessages(){
         return messageDao.getAlltMessage();
     }
-
-    //get all messages
-    // public List<Message>getMessages(){
-    //     List<Message>listmessages = new ArrayList<>();
-    //     listmessages = messageDao.getAlltMessage();
-
-    //     for(Message list : listmessages){
-    //         if(list == null){
-    //             return null;
-    //         }
-    //         // listmessages = messageDao.getAlltMessage();
-    //     }
-    //     return listmessages;
-    // }
 
     //add message
     public Message addMessage(Message message){
@@ -64,36 +39,53 @@ public class MessageService{
     }
 
     //get message by id
-    public Message getMessageById(int id) {
+    public Message getOneMessageById(int id) {
         
-        return messageDao.getMessageById(id);
+        return messageDao.getOneMessageById(id);
     }
 
     //deleted message
     public Message del(int id){
         messageDao.deleteMessage(id);
-        return messageDao.getMessageById(id);
+        return messageDao.getOneMessageById(id);    //change made
         
     }
 
+    // public Message updateMessage(int id, Message message){
+    //     Message messageId = messageDao.getOneMessageById(id); //change made
+    //     if(messageId == null && message.getMessage_text() != null && message.getMessage_text().length()<= 255){
+    //         messageDao.getMessageUpdate(id, message);
+    //         return messageDao.getOneMessageById(id);  //change made
+    //         // return null;
+    //     }
+    //     // messageDao.getMessageUpdate(id, message);
+    //     // return messageDao.getOneMessageById(id);
+    //     return null;
+    // }
+
+    // public Message updateMessage(int id, Message message){
+    //     Message messageId = messageDao.getOneMessageById(id);
+    //     if(messageId == null){
+    //         return null;
+    //     }
+    //     else if( message.getMessage_text() != null && message.getMessage_text().length()<= 255){
+    //         messageDao.getMessageUpdate(id, message);   
+    //     }
+    //     return messageDao.getOneMessageById(id);
+    // }
+
     public Message updateMessage(int id, Message message){
-        Message messageId = messageDao.getMessageById(id);
-        if(messageId == null && message.getMessage_text() != null && message.getMessage_text().length()<= 255){
-            messageDao.getMessageUpdate(id, message);
-            return messageDao.getMessageById(id);
-           
+        Message messageId = messageDao.getOneMessageById(id);
+        if(messageId != null && message.getMessage_text()!= null & message.getMessage_text().length()<=255){
+            messageDao.getMessageUpdate(id, messageId);
+            return messageDao.getOneMessageById(id);
         }
         return null;
     }
 
-    public List<Message> getAllByAccountId(int account_id){
-        // return messageDao.getMessagesByGivenId(account_id);
-        List<Message> list = new ArrayList<>();
-        list = messageDao.getMessagesByGivenId(account_id);
-        if(list == null){
-            return null;
-        }
-        return messageDao.getMessagesByGivenId(account_id);
+    // public List<Message> getAllByAccountId(int account_id){
+    //     // return messageDao.getMessagesByGivenId(account_id);
+    //     return messageDao.getMessagesByGivenId(account_id);
        
-    }
+    // }
 }
