@@ -38,38 +38,26 @@ public class ServiceAccount{
         
     }
 
+    // public Account addAccount(Account account){
+    //     Account accounts= accountDao.getAccountByUserName(account.getUsername());
+        
+    //     if(account.getUsername() == null  && account.getPassword().length() >= 4 && accounts == null){        
+    //             return accountDao.createAccount(account);   
+    //     }
+    //     return null;
+        
+    // }
+
     public Account userLogin(Account account){
         // Account accounts = accountDao.getAccountById(account.getAccount_id());
-        Account matchUsername = accountDao.getUserNameAndPassword(account.getUsername(), account.getPassword());
-        // Account userPassword = accountDao.get
+        // Account matchUsername = accountDao.getUserNameAndPassword(account.getUsername(), account.getPassword());
+        Account userName = accountDao.getAccountByUserName(account.getUsername());
+        Account userPassword = accountDao.getAccountByPassword(account.getPassword());
 
-        if(matchUsername == null){
+        if(userName != null && userPassword != null){
                 return accountDao.getAccountById(account.getAccount_id());
             
         }
         return null;
     }
-
-    // public Account userLogin(String username, String password){
-    //    Account accountExist = accountDao.getUserNameAndPassword(username, password);
-    //    if(username == null && password == null){
-    //         if(accountExist != null){
-    //             return accountDao.getAccountByUserName(username);
-    //         }
-    //    }
-    //    return null;     
-    // }
-    
-    // public Account userLogin(Account account){
-    //     Account match = null;
-    //     Account accountExist = accountDao.getAccountByUserName(account.getUsername());
-        
-    //      if(accountExist.getUsername().equals(account.username) && accountExist.getPassword().equals(account.password)){
-    //          match = accountExist;
-    //      }
-    //      return match;
-    //  }
-
-   
-
 }

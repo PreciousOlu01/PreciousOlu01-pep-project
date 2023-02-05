@@ -58,6 +58,20 @@ public class MessageDao {
     }
 
     //update
+    // public void getMessageUpdate(int id, Message message){
+    //     Connection conn = ConnectionUtil.getConnection();
+    //     try{
+    //         String sql= "UPDATE message SET message_text=? WHERE message_id=?;";
+    //         PreparedStatement ps= conn.prepareStatement(sql);
+    //         ps.setString(1, message.getMessage_text());
+    //         ps.setInt(2, id);
+
+    //         ps.executeUpdate();
+    //     }catch(SQLException e){
+    //         System.out.println(e.getMessage());
+    //     }
+    // }
+
     public void getMessageUpdate(int id, Message message){
         Connection conn = ConnectionUtil.getConnection();
         try{
@@ -106,22 +120,43 @@ public class MessageDao {
     }
 
     //get message by foreignKey(Account id)
-    public Message getMessageByAccountId(int Account_id){
+    // public Message getMessageByAccountId(int account_id){
+    //     Connection conn = ConnectionUtil.getConnection();
+    //     try{
+    //         String sql = "SELECT * FROM message where posted_by=?;";
+    //         PreparedStatement ps = conn.prepareStatement(sql);
+    //         ps.setInt(1, account_id);
+
+    //         ResultSet rs = ps.executeQuery();
+    //         while(rs.next()){
+    //             Message message = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), 
+    //             rs.getString("message_text"), rs.getLong("time_posted_epoch"));
+    //             return message;
+    //         }
+    //     }catch(SQLException e){
+    //         System.out.println(e.getMessage());
+    //     }
+    //     return null;
+    // }
+
+   public List<Message> getMessagesByGivenId(int account_id){
+        List <Message> accountId = new ArrayList<>();
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String sql = "SELECT * FROM message where posted_by=?;";
+            String sql = "SELECT * FROM message WHERE posted_by=?;";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, Account_id);
+            ps.setInt(1, account_id);
 
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                Message message = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), 
-                rs.getString("message_text"), rs.getLong("time_posted_epoch"));
-                return message;
+                Message msg = new Message(rs.getInt("message_id"), rs.getInt("posted_by"),
+                 rs.getString("message_text"),rs.getLong("time_posted_epoch"));
+                 accountId.add(msg);
+                 return accountId;
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
         return null;
-    }
+   }
 }

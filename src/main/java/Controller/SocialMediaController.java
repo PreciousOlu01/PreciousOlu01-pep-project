@@ -34,23 +34,25 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         
-        app.get("/register",this::getAllRegisteredHandler);
+        // app.get("/register",this::getAllRegisteredHandler);
         app.post("/register",this::postRegisterHandler);
         app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
+        app.patch("/messages/{message_id}", this::patchUpdateMessage);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
         app.delete("/messages/{message_id}", this::deleteMessageHandler);
-        app.patch("/messages/{message_id}", this::patchUpdateMessage);
+        // app.get("/accounts/{account_id}/messages", this::getAllMessagesByGivenId);
+        
         // app.get("/login", this::getLoginHandler);
 
         return app;
     }
     
-    private void getAllRegisteredHandler(Context ctx) throws JsonProcessingException{
-        List<Account>accounts= accountService.allAccounts();
-        ctx.json(accounts);
-    }
+    // private void getAllRegisteredHandler(Context ctx) throws JsonProcessingException{
+    //     List<Account>accounts= accountService.allAccounts();
+    //     ctx.json(accounts);
+    // }
 
     private void postRegisterHandler(Context ctx)throws JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
@@ -98,8 +100,15 @@ public class SocialMediaController {
     }
     
     private void getAllMessagesHandler(Context ctx) throws JsonMappingException{
-        List<Message>messages = messageService.getMessages();
-        ctx.json(messages);
+        // List<Message>messages = messageService.getMessages();
+        // ctx.json(messages);
+
+        // if(messages == null){
+        //     ctx.status(200);
+        // }
+        // else{
+        //     ctx.json(messages);
+        // }
     }
 
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException{
@@ -113,24 +122,25 @@ public class SocialMediaController {
     private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
         // int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
         // ctx.json(deleteId);
-        ObjectMapper obj = new ObjectMapper(); 
-        Message message = obj.readValue(ctx.body(), Message.class);
-        int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
-        Message delet = messageService.del(deleteId,message);
+        // ObjectMapper obj = new ObjectMapper(); 
+        // Message message = obj.readValue(ctx.body(), Message.class);
+        // int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
+        // Message delet = messageService.del(deleteId,message);
 
-        if(delet == null){
-            ctx.status(200);
-        }
-        else{
-            ctx.json(obj.writeValueAsString(delet));
-        }
+        // if(delet != null){
+        //     ctx.result("now-deleted");
+        // }
+        // else{
+        //     ctx.status(200);
+        // }
+
     }
 
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper objMapper = new ObjectMapper();
         Message message = objMapper.readValue(ctx.body(), Message.class);
 
-        ctx.contentType("application/Json");
+        // ctx.contentType("application/Json");
 
         int messId = Integer.parseInt(ctx.pathParam("message_id"));
         Message updatedMessages = messageService.updateMessage(messId, message);
@@ -145,4 +155,7 @@ public class SocialMediaController {
         }
     }
 
+    // private void getAllMessagesByGivenId(Context ctx) throws JsonProcessingException{
+        
+    // }
 }
