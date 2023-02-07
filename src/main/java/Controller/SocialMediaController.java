@@ -2,6 +2,8 @@ package Controller;
 
 import java.util.List;
 
+import org.eclipse.jetty.util.security.Password;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,8 +43,8 @@ public class SocialMediaController {
         app.patch("/messages/{message_id}", this::patchUpdateMessage);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
-        app.delete("/messages/{message_id}", this::deleteMessageHandler);
-        // app.get("/accounts/{account_id}/messages", this::getAllMessagesByGivenId);
+        // app.delete("/messages/{message_id}", this::deleteMessageHandler);
+        app.get("/accounts/{account_id}/messages", this::getAllMessagesByGivenId);
         
         // app.get("/login", this::getLoginHandler);
 
@@ -59,19 +61,20 @@ public class SocialMediaController {
         Account account = mapObj.readValue(ctx.body(), Account.class);
         Account createdAcc = accountService.addAccount(account);
 
-        if(createdAcc==null){
-            ctx.status(400);
+        if(createdAcc!=null){
             
+            ctx.json(mapObj.writeValueAsString(createdAcc));
+            ctx.status(200);
         }
         else{
-            ctx.json(mapObj.writeValueAsString(createdAcc));
-            
+            ctx.status(400);
         }
     }
 
     private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
         Account readlogin = mapObj.readValue(ctx.body(),Account.class);
+        // String username = 
         Account readServiceAcc = accountService.userLogin(readlogin);
 
         if(readServiceAcc== null){
@@ -79,6 +82,7 @@ public class SocialMediaController {
         }
         else{
             ctx.json(mapObj.writeValueAsString(readServiceAcc));
+            ctx.status(200);
         }
     }
 
@@ -99,35 +103,29 @@ public class SocialMediaController {
         }
     }
     
+    //get all messages
     private void getAllMessagesHandler(Context ctx){
         List<Message>messages = messageService.getMessages();
         ctx.json(messages); 
     }
 
+    //get message by id
     private void getMessageByIdHandler(Context ctx) {
         int messId = Integer.parseInt(ctx.pathParam("message_id"));
         ctx.json(messageService.getOneMessageById(messId));                 //change made
+        ctx.status(200);
     }
     
     //if message existed the response body should contain now deleted message. the response 
     //status should be 200
     //if the message did not exist the response should be 200, but the response body should be empty.
-    private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
-        // int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
-        // ctx.json(deleteId);
-        // ObjectMapper obj = new ObjectMapper(); 
-        // Message message = obj.readValue(ctx.body(), Message.class);
-        // int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
-        // Message delet = messageService.del(deleteId,message);
 
-        // if(delet != null){
-        //     ctx.result("now-deleted");
-        // }
-        // else{
-        //     ctx.status(200);
-        // }
+    //delete not working
+    // private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
+    //     int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
+    //     ctx.json(messageService.del(deleteId));
 
-    }
+    // }
 
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper objMapper = new ObjectMapper();
@@ -151,7 +149,9 @@ public class SocialMediaController {
         }
     }
 
-    // private void getAllMessagesByGivenId(Context ctx) throws JsonProcessingException{
-        
-    // }
+    private void getAllMessagesByGivenId(Context ctx) throws JsonProcessingException{
+        int messageId= Integer.parseInt(ctx.pathParam("messageId"));
+        List<Message>messages = messageService.getAllByAccountId(messageId);
+        ctx.json(messages);
+    }
 }

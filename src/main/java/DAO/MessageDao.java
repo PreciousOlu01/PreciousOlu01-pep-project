@@ -97,17 +97,17 @@ public class MessageDao {
     public Message getOneMessageById(int id){
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String sql = "SELECT message_text FROM message WHERE message_id=?;";
+            String sql = "SELECT * FROM message WHERE message_id=?;";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
 
-            ps.executeQuery();
+            ResultSet rs= ps.executeQuery();
             
-            // while(rs.next()){
-            //     Message message = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), 
-            //     rs.getString("message_text"), rs.getLong("time_posted_epoch"));
-            //     return message;
-            // }
+            while(rs.next()){
+                Message message = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), 
+                rs.getString("message_text"), rs.getLong("time_posted_epoch"));
+                return message;
+            }
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
@@ -115,17 +115,21 @@ public class MessageDao {
     }
 
     //delete message
-    public void deleteMessage(int id){
-        Connection conn = ConnectionUtil.getConnection();
-        try{
-            String sql="DELETE message WHERE message_id=?;";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
-    }
+    //not working
+
+    // public void deleteMessage(int id){
+    //     Connection conn = ConnectionUtil.getConnection();
+    //     try{
+    //         String sql="DELETE FROM message WHERE message_id=?;";    //change made-> added from clause
+    //         PreparedStatement ps = conn.prepareStatement(sql);
+    //         ps.setInt(1, id);
+
+    //         ps.executeUpdate();
+    //     }catch(SQLException e){
+    //         System.out.println(e.getMessage());
+    //     }
+    //     // return null;
+    // }
 
     // get message by foreignKey(Account id)
     // public Message getMessageByAccountId(int account_id){
@@ -152,7 +156,8 @@ public class MessageDao {
         Connection conn = ConnectionUtil.getConnection();
        
         try{
-            String sql = "SELECT * FROM message WHERE posted_by=?;";
+            // String sql = "SELECT * FROM message WHERE posted_by=?;";    //Change made
+            String sql = "SELECT * FROM message INNER JOIN account ON message.posted_by= account.account_id WHERE account.account_id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, account_id);
 

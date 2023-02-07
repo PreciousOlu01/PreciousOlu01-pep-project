@@ -14,10 +14,29 @@ import Util.ConnectionUtil;
 public class AccountDao {
 
     /**get account using username and password */
+    // public Account getUserNameAndPassword(String username, String password){
+    //     Connection conn= ConnectionUtil.getConnection();
+    //     try{
+    //         String sqlString = "SELECT * FROM Account where username=? and password =?";
+    //         PreparedStatement preparedStatement = conn.prepareStatement(sqlString);
+    //         //get preparedStatement
+    //         preparedStatement.setString(1, username);
+    //         preparedStatement.setString(2, password);
+
+    //         ResultSet rs= preparedStatement.executeQuery();
+    //         while(rs.next()){
+    //             Account accounts= new Account(rs.getInt("account_id"), rs.getString("username"),rs.getString("password"));
+    //             return accounts;
+    //         }
+    //     }catch(SQLException e){
+    //         System.out.println(e.getMessage());
+    //     }
+    //     return null;
+    // }
     public Account getUserNameAndPassword(String username, String password){
         Connection conn= ConnectionUtil.getConnection();
         try{
-            String sqlString = "SELECT * FROM Account where username=? and password =?";
+            String sqlString = "SELECT * FROM account where username=? and password =?";
             PreparedStatement preparedStatement = conn.prepareStatement(sqlString);
             //get preparedStatement
             preparedStatement.setString(1, username);
@@ -36,12 +55,13 @@ public class AccountDao {
 
     /**the method allows users to create account in an existing table*/
 
-    public Account createAccount(Account account){
+    public Account insertAccount(Account account){
         //create a connection
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String sqlString= "INSERT INTO Account(username, password) VALUES (?,?);";
+            String sqlString= "INSERT INTO account(username, password) VALUES (?,?);";
             PreparedStatement preparedStatement= conn.prepareStatement(sqlString, Statement.RETURN_GENERATED_KEYS);
+            
             preparedStatement.setString(1,account.getUsername());
             preparedStatement.setString(2,account.getPassword());   
 
@@ -61,7 +81,7 @@ public class AccountDao {
     public Account getAccountByUserName(String username){
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String strSql= "SELECT * FROM Account WHERE username=?;";
+            String strSql= "SELECT * FROM account WHERE username=?;";
             PreparedStatement ps = conn.prepareStatement(strSql);
             ps.setString(1, username);
 
@@ -80,7 +100,7 @@ public class AccountDao {
     public Account getAccountByPassword(String password){
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String strSql= "SELECT * FROM Account WHERE password=?;";
+            String strSql= "SELECT * FROM account WHERE password=?;";
             PreparedStatement ps = conn.prepareStatement(strSql);
             ps.setString(1, password);
 
@@ -99,7 +119,7 @@ public class AccountDao {
     public Account getAccountById(int id){
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String strSql= "SELECT * FROM Account WHERE account_id=?;";
+            String strSql= "SELECT * FROM account WHERE account_id=?;";
             PreparedStatement ps = conn.prepareStatement(strSql);
             ps.setInt(1, id);
 
@@ -119,7 +139,7 @@ public class AccountDao {
         Connection conn = ConnectionUtil.getConnection();
         List<Account>accountList= new ArrayList<>();
         try{
-            String sqlString = "SELECT * FROM Account";
+            String sqlString = "SELECT * FROM account";
             PreparedStatement preparedStatement = conn.prepareStatement(sqlString);
 
             ResultSet rs = preparedStatement.executeQuery();

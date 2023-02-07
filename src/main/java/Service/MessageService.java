@@ -24,15 +24,23 @@ public class MessageService{
     }
 
     //add message
-    public Message addMessage(Message message){
-
-        // Message messages = messageDao.getMessageById(message.getMessage_id());
-        // Message match = messageDao.getMessageByAccountId(message.getPosted_by());
-        // Message match = messageDao.getMessagesByGivenId(message.posted_by);
-        List<Message> match = messageDao.getMessagesByGivenId(message.posted_by);
-    
+    // public Message addMessage(Message message){
+    //     List<Message> match = messageDao.getMessagesByGivenId(message.posted_by);
         
-        if(message.getMessage_text() != null && message.getMessage_text().length() <= 255 && match == null){
+    //     String message_text= message.getMessage_text();
+
+    //     if(message_text != "" && message.getMessage_text().length() <= 255 && match == null){
+    //        return messageDao.createMessage(message);
+    //     }
+    //     return messageDao.createMessage(message);
+    // }
+
+    public Message addMessage(Message message){
+        List<Message> match = messageDao.getMessagesByGivenId(message.posted_by);
+        
+        String message_text= message.getMessage_text();
+        
+        if(message_text != "" && message.getMessage_text().length() <= 255 && match == null){
            return messageDao.createMessage(message);
         }
         return null;
@@ -45,11 +53,15 @@ public class MessageService{
     }
 
     //deleted message
-    public Message del(int id){
-        messageDao.deleteMessage(id);
-        return messageDao.getOneMessageById(id);    //change made
-        
-    }
+    // public Message del(int id){
+    //     Message message = messageDao.getOneMessageById(id);
+    //     if(message == null){
+    //         messageDao.deleteMessage(id);
+    //         return messageDao.getOneMessageById(id);
+    //     }
+    //     System.out.println("now-deleted");
+    //     return null;
+    // }
 
     // public Message updateMessage(int id, Message message){
     //     Message messageId = messageDao.getOneMessageById(id); //change made
@@ -76,16 +88,15 @@ public class MessageService{
 
     public Message updateMessage(int id, Message message){
         Message messageId = messageDao.getOneMessageById(id);
-        if(messageId != null && message.getMessage_text()!= null & message.getMessage_text().length()<=255){
+        if(messageId == null && message.getMessage_text()!= null & message.getMessage_text().length()<=255){
             messageDao.getMessageUpdate(id, messageId);
             return messageDao.getOneMessageById(id);
         }
         return null;
     }
 
-    // public List<Message> getAllByAccountId(int account_id){
-    //     // return messageDao.getMessagesByGivenId(account_id);
-    //     return messageDao.getMessagesByGivenId(account_id);
-       
-    // }
+    public List<Message> getAllByAccountId(int account_id){
+        return messageDao.getMessagesByGivenId(account_id);   
+    }
+
 }
