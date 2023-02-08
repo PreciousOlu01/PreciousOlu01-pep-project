@@ -14,33 +14,14 @@ import Util.ConnectionUtil;
 public class AccountDao {
 
     /**get account using username and password */
-    // public Account getUserNameAndPassword(String username, String password){
-    //     Connection conn= ConnectionUtil.getConnection();
-    //     try{
-    //         String sqlString = "SELECT * FROM Account where username=? and password =?";
-    //         PreparedStatement preparedStatement = conn.prepareStatement(sqlString);
-    //         //get preparedStatement
-    //         preparedStatement.setString(1, username);
-    //         preparedStatement.setString(2, password);
-
-    //         ResultSet rs= preparedStatement.executeQuery();
-    //         while(rs.next()){
-    //             Account accounts= new Account(rs.getInt("account_id"), rs.getString("username"),rs.getString("password"));
-    //             return accounts;
-    //         }
-    //     }catch(SQLException e){
-    //         System.out.println(e.getMessage());
-    //     }
-    //     return null;
-    // }
-    public Account getUserNameAndPassword(String username, String password){
+    public Account getUserNameAndPassword(Account account){
         Connection conn= ConnectionUtil.getConnection();
         try{
             String sqlString = "SELECT * FROM account where username=? and password =?";
             PreparedStatement preparedStatement = conn.prepareStatement(sqlString);
             //get preparedStatement
-            preparedStatement.setString(1, username);
-            preparedStatement.setString(2, password);
+            preparedStatement.setString(1, account.getUsername());
+            preparedStatement.setString(2, account.getPassword());
 
             ResultSet rs= preparedStatement.executeQuery();
             while(rs.next()){

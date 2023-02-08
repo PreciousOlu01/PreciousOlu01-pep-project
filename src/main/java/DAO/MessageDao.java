@@ -117,19 +117,18 @@ public class MessageDao {
     //delete message
     //not working
 
-    // public void deleteMessage(int id){
-    //     Connection conn = ConnectionUtil.getConnection();
-    //     try{
-    //         String sql="DELETE FROM message WHERE message_id=?;";    //change made-> added from clause
-    //         PreparedStatement ps = conn.prepareStatement(sql);
-    //         ps.setInt(1, id);
+    public void deleteMessage(int id){
+        Connection conn = ConnectionUtil.getConnection();
+        try{
+            String sql="DELETE * FROM message WHERE message_id=?;";    //change made-> added from clause
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
 
-    //         ps.executeUpdate();
-    //     }catch(SQLException e){
-    //         System.out.println(e.getMessage());
-    //     }
-    //     // return null;
-    // }
+            ps.executeUpdate();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
 
     // get message by foreignKey(Account id)
     // public Message getMessageByAccountId(int account_id){
@@ -174,3 +173,15 @@ public class MessageDao {
         return null;
    }
 }
+// public void deleteMessage(int id){
+//     Connection conn = ConnectionUtil.getConnection();
+//     try{
+//         String sql="DELETE * FROM message WHERE message_id=?;";    //change made-> added from clause
+//         PreparedStatement ps = conn.prepareStatement(sql);
+//         ps.setInt(1, id);
+
+//         ps.executeUpdate();
+//     }catch(SQLException e){
+//         System.out.println(e.getMessage());
+//     }
+// }

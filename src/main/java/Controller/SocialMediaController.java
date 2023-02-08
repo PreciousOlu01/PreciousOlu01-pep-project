@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import DAO.AccountDao;
 import Model.Account;
 import Model.Message;
 import Service.MessageService;
@@ -23,10 +24,12 @@ import io.javalin.http.Context;
 public class SocialMediaController {
     ServiceAccount accountService;
     MessageService messageService;
+    AccountDao accountDao;
 
     public SocialMediaController(){
         accountService = new ServiceAccount();
         messageService = new MessageService();
+        accountDao = new AccountDao();
     }
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
@@ -43,19 +46,15 @@ public class SocialMediaController {
         app.patch("/messages/{message_id}", this::patchUpdateMessage);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getMessageByIdHandler);
-        // app.delete("/messages/{message_id}", this::deleteMessageHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageHandler);
         app.get("/accounts/{account_id}/messages", this::getAllMessagesByGivenId);
         
         // app.get("/login", this::getLoginHandler);
 
         return app;
     }
-    
-    // private void getAllRegisteredHandler(Context ctx) throws JsonProcessingException{
-    //     List<Account>accounts= accountService.allAccounts();
-    //     ctx.json(accounts);
-    // }
 
+    //register account
     private void postRegisterHandler(Context ctx)throws JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
         Account account = mapObj.readValue(ctx.body(), Account.class);
@@ -71,10 +70,10 @@ public class SocialMediaController {
         }
     }
 
+    //account login
     private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
-        Account readlogin = mapObj.readValue(ctx.body(),Account.class);
-        // String username = 
+        Account readlogin = mapObj.readValue(ctx.body(),Account.class); 
         Account readServiceAcc = accountService.userLogin(readlogin);
 
         if(readServiceAcc== null){
@@ -86,9 +85,6 @@ public class SocialMediaController {
         }
     }
 
-    // private void getLoginHandler(Context ctx) throws JsonProcessingException{
-    //     ctx.json(accountService.userLogin(ctx.pathParam("username"), ctx.pathParam("password")));
-    // }
 
     private void postMessageHandler(Context ctx) throws JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
@@ -121,11 +117,24 @@ public class SocialMediaController {
     //if the message did not exist the response should be 200, but the response body should be empty.
 
     //delete not working
-    // private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
-    //     int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
-    //     ctx.json(messageService.del(deleteId));
+    private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
+        int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
+        ctx.json(messageService.del(deleteId));
 
-    // }
+        // ObjectMapper obj = new ObjectMapper();
+        // Message delMessage = obj.readValue(ctx.body(), Message.class);
+        // int del_id= Integer.parseInt(ctx.pathParam("message_id"));
+        // Message msgDel = messageService.del(del_id, delMessage);
+
+        // System.out.println(msgDel);
+        // if(msgDel==null){
+        //     ctx.status(200);
+        // }
+        // else{
+        //     ctx.json(obj.writeValueAsString(msgDel));
+        // }
+
+    }
 
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper objMapper = new ObjectMapper();
@@ -143,9 +152,6 @@ public class SocialMediaController {
         }
         else{
             ctx.json(objMapper.writeValueAsString(updatedMessages));    //changes made
-            // String convertStr = objMapper.writeValueAsString(updatedMessages);
-            // ctx.result(convertStr);
-
         }
     }
 

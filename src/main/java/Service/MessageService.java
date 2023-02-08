@@ -53,15 +53,18 @@ public class MessageService{
     }
 
     //deleted message
-    // public Message del(int id){
-    //     Message message = messageDao.getOneMessageById(id);
-    //     if(message == null){
-    //         messageDao.deleteMessage(id);
-    //         return messageDao.getOneMessageById(id);
-    //     }
-    //     System.out.println("now-deleted");
-    //     return null;
-    // }
+    public Message del(int id){
+        Message messageId = messageDao.getOneMessageById(id);
+        // String message = "now-deleted";
+
+        if(messageId != null){
+            messageDao.deleteMessage(id);
+            // System.out.println(message);
+            return messageDao.getOneMessageById(id);
+            
+        }
+        return null;
+    }
 
     // public Message updateMessage(int id, Message message){
     //     Message messageId = messageDao.getOneMessageById(id); //change made
