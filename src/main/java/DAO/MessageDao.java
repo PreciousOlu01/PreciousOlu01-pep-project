@@ -39,8 +39,8 @@ public class MessageDao {
 
     //read
     public List<Message> getAlltMessage(){
-        List<Message> messages = new ArrayList<>();
         Connection conn = ConnectionUtil.getConnection();
+        List<Message> messages = new ArrayList<>();
         try{
             String sql = "SELECT * FROM message;";
             PreparedStatement ps= conn.prepareStatement(sql);
@@ -72,6 +72,7 @@ public class MessageDao {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        
     }
 
     //get message by id
@@ -94,12 +95,13 @@ public class MessageDao {
     //     return null;
     // }
 
-    public Message getOneMessageById(int id){
+    //get one message given message id
+    public Message getOneMessageById(int message_id){
         Connection conn = ConnectionUtil.getConnection();
         try{
             String sql = "SELECT * FROM message WHERE message_id=?;";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
+            ps.setInt(1, message_id);
 
             ResultSet rs= ps.executeQuery();
             
@@ -120,7 +122,7 @@ public class MessageDao {
     public void deleteMessage(int id){
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String sql="DELETE * FROM message WHERE message_id=?;";    //change made-> added from clause
+            String sql= "DELETE * FROM message WHERE message_id=?;";    //change made-> added from clause
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
 
@@ -128,51 +130,34 @@ public class MessageDao {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
+        System.out.println("now-deleted");
     }
 
-    // get message by foreignKey(Account id)
-    // public Message getMessageByAccountId(int account_id){
-    //     Connection conn = ConnectionUtil.getConnection();
-    //     try{
-    //         String sql = "SELECT * FROM message where posted_by=?;";
-    //         PreparedStatement ps = conn.prepareStatement(sql);
-    //         ps.setInt(1, account_id);
-
-    //         ResultSet rs = ps.executeQuery();
-    //         while(rs.next()){
-    //             Message message = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), 
-    //             rs.getString("message_text"), rs.getLong("time_posted_epoch"));
-    //             return message;
-    //         }
-    //     }catch(SQLException e){
-    //         System.out.println(e.getMessage());
-    //     }
-    //     return null;
-    // }
 
    public List<Message> getMessagesByGivenId(int account_id){
-        List <Message> accountId = new ArrayList<>();
         Connection conn = ConnectionUtil.getConnection();
+        List <Message> accountId = new ArrayList<>();
        
         try{
-            // String sql = "SELECT * FROM message WHERE posted_by=?;";    //Change made
-            String sql = "SELECT * FROM message INNER JOIN account ON message.posted_by= account.account_id WHERE account.account_id=?";
+            String sql = "SELECT * FROM message WHERE posted_by=?;";    //Change made
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, account_id);
 
             ResultSet rs = ps.executeQuery();
+            
             while(rs.next()){
                 Message msg = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), 
                 rs.getString("message_text"), rs.getLong("time_posted_epoch"));
-                 accountId.add(msg);
-                 return accountId;
+                accountId.add(msg);
+                // return accountId;
             }
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
-        return null;
+        return accountId;
    }
 }
+
 // public void deleteMessage(int id){
 //     Connection conn = ConnectionUtil.getConnection();
 //     try{

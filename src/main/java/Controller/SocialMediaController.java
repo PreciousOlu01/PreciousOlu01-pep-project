@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import DAO.AccountDao;
+import DAO.MessageDao;
 import Model.Account;
 import Model.Message;
 import Service.MessageService;
@@ -96,6 +97,7 @@ public class SocialMediaController {
         }
         else{
             ctx.json(mapObj.writeValueAsString(readMessage));
+            ctx.status(200);
         }
     }
     
@@ -108,8 +110,8 @@ public class SocialMediaController {
     //get message by id
     private void getMessageByIdHandler(Context ctx) {
         int messId = Integer.parseInt(ctx.pathParam("message_id"));
-        ctx.json(messageService.getOneMessageById(messId));                 //change made
-        ctx.status(200);
+        ctx.json(messageService.getOneMessageById(messId));                 
+        
     }
     
     //if message existed the response body should contain now deleted message. the response 
@@ -117,9 +119,21 @@ public class SocialMediaController {
     //if the message did not exist the response should be 200, but the response body should be empty.
 
     //delete not working
+
     private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
         int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
         ctx.json(messageService.del(deleteId));
+        ctx.result("now-deleted");
+        // if(messageService.del(deleteId)==null){
+        //     ctx.status(200);
+        //     ctx.json(messageService.del(deleteId));
+        // }
+        // else{
+        //     ctx.result("now-deleted");
+        //     ctx.status(200);
+        // }
+
+    }
 
         // ObjectMapper obj = new ObjectMapper();
         // Message delMessage = obj.readValue(ctx.body(), Message.class);
@@ -134,29 +148,31 @@ public class SocialMediaController {
         //     ctx.json(obj.writeValueAsString(msgDel));
         // }
 
-    }
+    
 
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper objMapper = new ObjectMapper();
         Message message = objMapper.readValue(ctx.body(), Message.class);
 
-        // ctx.contentType("application/Json");
+        ctx.contentType("application/Json");
 
         int messId = Integer.parseInt(ctx.pathParam("message_id"));
         Message updatedMessages = messageService.updateMessage(messId, message);
         
-        System.out.println(updatedMessages);          //change made
+        // System.out.println(updatedMessages);          //change made
         if(updatedMessages == null){
             // ctx.json(objMapper.writeValueAsString(updatedMessages));
             ctx.status(400);
         }
         else{
             ctx.json(objMapper.writeValueAsString(updatedMessages));    //changes made
+            ctx.status(200);
         }
+        
     }
 
     private void getAllMessagesByGivenId(Context ctx) throws JsonProcessingException{
-        int messageId= Integer.parseInt(ctx.pathParam("messageId"));
+        int messageId= Integer.parseInt(ctx.pathParam("account_id"));
         List<Message>messages = messageService.getAllByAccountId(messageId);
         ctx.json(messages);
     }

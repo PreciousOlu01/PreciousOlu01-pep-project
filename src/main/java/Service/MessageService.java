@@ -40,28 +40,26 @@ public class MessageService{
         
         String message_text= message.getMessage_text();
         
-        if(message_text != "" && message.getMessage_text().length() <= 255 && match == null){
+        if(message_text != "" && message.getMessage_text().length() <= 255 && match != null){
            return messageDao.createMessage(message);
+           
         }
         return null;
     }
 
     //get message by id
-    public Message getOneMessageById(int id) {
+    public Message getOneMessageById(int message_id) {
         
-        return messageDao.getOneMessageById(id);
+        return messageDao.getOneMessageById(message_id);
     }
 
     //deleted message
     public Message del(int id){
-        Message messageId = messageDao.getOneMessageById(id);
-        // String message = "now-deleted";
-
-        if(messageId != null){
+        Message msg = messageDao.getOneMessageById(id);
+        
+        if(msg != null){
             messageDao.deleteMessage(id);
-            // System.out.println(message);
-            return messageDao.getOneMessageById(id);
-            
+            return msg;
         }
         return null;
     }
@@ -89,11 +87,21 @@ public class MessageService{
     //     return messageDao.getOneMessageById(id);
     // }
 
+    // public Message updateMessage(int id, Message message){
+    //     Message messageId = messageDao.getOneMessageById(id);
+    //     if(messageId == null && message.getMessage_text()!= null & message.getMessage_text().length()<=255){
+    //         messageDao.getMessageUpdate(id, messageId);
+    //         return messageDao.getOneMessageById(id);
+    //     }
+    //     return null;
+    // }
+
     public Message updateMessage(int id, Message message){
         Message messageId = messageDao.getOneMessageById(id);
-        if(messageId == null && message.getMessage_text()!= null & message.getMessage_text().length()<=255){
-            messageDao.getMessageUpdate(id, messageId);
-            return messageDao.getOneMessageById(id);
+        String msg_text = message.getMessage_text();
+        if(messageId != null && msg_text!= "" & message.getMessage_text().length()<=255){
+            messageDao.getMessageUpdate(id, message);
+            return this.messageDao.getOneMessageById(id);
         }
         return null;
     }
