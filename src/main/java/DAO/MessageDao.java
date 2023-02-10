@@ -23,7 +23,7 @@ public class MessageDao {
             //setInt and SetString for preparedStatement
             ps.setInt(1, message.getPosted_by());
             ps.setString(2, message.getMessage_text());
-            ps.setLong(3, Long.bitCount(message.getTime_posted_epoch()));
+            ps.setLong(3, message.getTime_posted_epoch());
 
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -75,25 +75,6 @@ public class MessageDao {
         
     }
 
-    //get message by id
-    // public Message getMessageById(int id){
-    //     Connection conn = ConnectionUtil.getConnection();
-    //     try{
-    //         String sql = "SELECT * FROM message WHERE message_id=?;";
-    //         PreparedStatement ps = conn.prepareStatement(sql);
-    //         ps.setInt(1, id);
-
-    //         ResultSet rs = ps.executeQuery();
-    //         while(rs.next()){
-    //             Message message = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), 
-    //             rs.getString("message_text"), rs.getLong("time_posted_epoch"));
-    //             return message;
-    //         }
-    //     }catch(SQLException e){
-    //         System.out.println(e.getMessage());
-    //     }
-    //     return null;
-    // }
 
     //get one message given message id
     public Message getOneMessageById(int message_id){
@@ -117,12 +98,11 @@ public class MessageDao {
     }
 
     //delete message
-    //not working
 
-    public void deleteMessage(int id){
+    public Message deleteMessage(int id){
         Connection conn = ConnectionUtil.getConnection();
         try{
-            String sql= "DELETE * FROM message WHERE message_id=?;";    //change made-> added from clause
+            String sql= "DELETE FROM message WHERE message_id=?;";    //change made-> added from clause
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
 
@@ -130,9 +110,11 @@ public class MessageDao {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
-        System.out.println("now-deleted");
+        return null;
+        
     }
 
+    //get messages by given account_id
 
    public List<Message> getMessagesByGivenId(int account_id){
         Connection conn = ConnectionUtil.getConnection();
@@ -158,15 +140,3 @@ public class MessageDao {
    }
 }
 
-// public void deleteMessage(int id){
-//     Connection conn = ConnectionUtil.getConnection();
-//     try{
-//         String sql="DELETE * FROM message WHERE message_id=?;";    //change made-> added from clause
-//         PreparedStatement ps = conn.prepareStatement(sql);
-//         ps.setInt(1, id);
-
-//         ps.executeUpdate();
-//     }catch(SQLException e){
-//         System.out.println(e.getMessage());
-//     }
-// }

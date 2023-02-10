@@ -40,7 +40,6 @@ public class SocialMediaController {
     public Javalin startAPI() {
         Javalin app = Javalin.create();
         
-        // app.get("/register",this::getAllRegisteredHandler);
         app.post("/register",this::postRegisterHandler);
         app.post("/login", this::postLoginHandler);
         app.post("/messages", this::postMessageHandler);
@@ -50,12 +49,11 @@ public class SocialMediaController {
         app.delete("/messages/{message_id}", this::deleteMessageHandler);
         app.get("/accounts/{account_id}/messages", this::getAllMessagesByGivenId);
         
-        // app.get("/login", this::getLoginHandler);
-
         return app;
     }
 
-    //register account
+    /*post register account*/
+
     private void postRegisterHandler(Context ctx)throws JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
         Account account = mapObj.readValue(ctx.body(), Account.class);
@@ -71,7 +69,8 @@ public class SocialMediaController {
         }
     }
 
-    //account login
+    /*post account login*/
+    
     private void postLoginHandler(Context ctx) throws JsonMappingException, JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
         Account readlogin = mapObj.readValue(ctx.body(),Account.class); 
@@ -86,70 +85,63 @@ public class SocialMediaController {
         }
     }
 
-
+    /*post message */
     private void postMessageHandler(Context ctx) throws JsonProcessingException{
         ObjectMapper mapObj = new ObjectMapper();
         Message message = mapObj.readValue(ctx.body(), Message.class);
         Message readMessage = messageService.addMessage(message);
 
-        if(readMessage == null){
-           ctx.status(400);
-        }
-        else{
+        if(readMessage != null){
             ctx.json(mapObj.writeValueAsString(readMessage));
             ctx.status(200);
+
+        //    ctx.status(400);
+        }
+        else{
+            ctx.status(400);
+
         }
     }
     
-    //get all messages
+    /*get all messages*/
+
     private void getAllMessagesHandler(Context ctx){
         List<Message>messages = messageService.getMessages();
         ctx.json(messages); 
     }
 
-    //get message by id
+    /*get messageByIdhandler*/
+
     private void getMessageByIdHandler(Context ctx) {
         int messId = Integer.parseInt(ctx.pathParam("message_id"));
-        ctx.json(messageService.getOneMessageById(messId));                 
+        Message msg= messageService.getOneMessageById(messId);    
+        if(msg == null){
+            ctx.status(400);
+        }   
+        else{
+            ctx.json(messageService.getOneMessageById(messId));
+        }          
         
     }
     
-    //if message existed the response body should contain now deleted message. the response 
-    //status should be 200
-    //if the message did not exist the response should be 200, but the response body should be empty.
-
-    //delete not working
+    /*delete message*/
 
     private void deleteMessageHandler(Context ctx) throws JsonProcessingException{
-        int deleteId = Integer.parseInt(ctx.pathParam("message_id"));
-        ctx.json(messageService.del(deleteId));
-        ctx.result("now-deleted");
-        // if(messageService.del(deleteId)==null){
-        //     ctx.status(200);
-        //     ctx.json(messageService.del(deleteId));
-        // }
-        // else{
-        //     ctx.result("now-deleted");
-        //     ctx.status(200);
-        // }
+        int del_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message deleteMessage = messageService.del(del_id);
+
+        if(deleteMessage==null){
+            ctx.status(200);
+            
+        }
+        else{
+            ctx.json(deleteMessage);
+            ctx.status(200);
+        }
 
     }
 
-        // ObjectMapper obj = new ObjectMapper();
-        // Message delMessage = obj.readValue(ctx.body(), Message.class);
-        // int del_id= Integer.parseInt(ctx.pathParam("message_id"));
-        // Message msgDel = messageService.del(del_id, delMessage);
-
-        // System.out.println(msgDel);
-        // if(msgDel==null){
-        //     ctx.status(200);
-        // }
-        // else{
-        //     ctx.json(obj.writeValueAsString(msgDel));
-        // }
-
-    
-
+    /*patch update  */
     private void patchUpdateMessage(Context ctx) throws JsonProcessingException{
         ObjectMapper objMapper = new ObjectMapper();
         Message message = objMapper.readValue(ctx.body(), Message.class);
@@ -171,6 +163,7 @@ public class SocialMediaController {
         
     }
 
+    /*get all messages by given Id */
     private void getAllMessagesByGivenId(Context ctx) throws JsonProcessingException{
         int messageId= Integer.parseInt(ctx.pathParam("account_id"));
         List<Message>messages = messageService.getAllByAccountId(messageId);

@@ -20,12 +20,9 @@ public class ServiceAccount{
         this.accountDao = accountDao;
     }
 
-    public List<Account>allAccounts(){
-        //returns all info in the account;
-        return this.accountDao.getAllAccounts();
-    }
 
-        //register user
+    //register user
+
     public Account addAccount(Account account){
         Account accounts= accountDao.getAccountByUserName(account.getUsername());
         
@@ -35,6 +32,8 @@ public class ServiceAccount{
         }
         return null;   
     }
+
+    //userLogin
 
     public Account userLogin(Account account){
         return accountDao.getUserNameAndPassword(account);

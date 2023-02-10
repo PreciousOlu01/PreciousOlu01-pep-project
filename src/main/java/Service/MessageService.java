@@ -24,27 +24,21 @@ public class MessageService{
     }
 
     //add message
-    // public Message addMessage(Message message){
-    //     List<Message> match = messageDao.getMessagesByGivenId(message.posted_by);
-        
-    //     String message_text= message.getMessage_text();
 
-    //     if(message_text != "" && message.getMessage_text().length() <= 255 && match == null){
-    //        return messageDao.createMessage(message);
-    //     }
-    //     return messageDao.createMessage(message);
-    // }
+     public Message addMessage(Message message){
+        List<Message>match = messageDao.getMessagesByGivenId(message.getPosted_by());
 
-    public Message addMessage(Message message){
-        List<Message> match = messageDao.getMessagesByGivenId(message.posted_by);
+        String str= message.getMessage_text();
         
-        String message_text= message.getMessage_text();
-        
-        if(message_text != "" && message.getMessage_text().length() <= 255 && match != null){
-           return messageDao.createMessage(message);
-           
-        }
-        return null;
+        // if(message.getMessage_text() != "" && message.getMessage_text().length() <= 255){
+        //    return messageDao.createMessage(message);   
+        // }
+        // return null;
+
+        if(str != "" && message.getMessage_text().length() <= 255 && match!=null){
+            return messageDao.createMessage(message);   
+         }
+         return null;
     }
 
     //get message by id
@@ -58,43 +52,13 @@ public class MessageService{
         Message msg = messageDao.getOneMessageById(id);
         
         if(msg != null){
-            messageDao.deleteMessage(id);
+           // System.out.println("now-deleted");
+           messageDao.deleteMessage(id);
             return msg;
         }
+        
         return null;
     }
-
-    // public Message updateMessage(int id, Message message){
-    //     Message messageId = messageDao.getOneMessageById(id); //change made
-    //     if(messageId == null && message.getMessage_text() != null && message.getMessage_text().length()<= 255){
-    //         messageDao.getMessageUpdate(id, message);
-    //         return messageDao.getOneMessageById(id);  //change made
-    //         // return null;
-    //     }
-    //     // messageDao.getMessageUpdate(id, message);
-    //     // return messageDao.getOneMessageById(id);
-    //     return null;
-    // }
-
-    // public Message updateMessage(int id, Message message){
-    //     Message messageId = messageDao.getOneMessageById(id);
-    //     if(messageId == null){
-    //         return null;
-    //     }
-    //     else if( message.getMessage_text() != null && message.getMessage_text().length()<= 255){
-    //         messageDao.getMessageUpdate(id, message);   
-    //     }
-    //     return messageDao.getOneMessageById(id);
-    // }
-
-    // public Message updateMessage(int id, Message message){
-    //     Message messageId = messageDao.getOneMessageById(id);
-    //     if(messageId == null && message.getMessage_text()!= null & message.getMessage_text().length()<=255){
-    //         messageDao.getMessageUpdate(id, messageId);
-    //         return messageDao.getOneMessageById(id);
-    //     }
-    //     return null;
-    // }
 
     public Message updateMessage(int id, Message message){
         Message messageId = messageDao.getOneMessageById(id);

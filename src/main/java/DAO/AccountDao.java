@@ -34,7 +34,7 @@ public class AccountDao {
         return null;
     }
 
-    /**the method allows users to create account in an existing table*/
+    /**the method allows users to insert account in an existing table*/
 
     public Account insertAccount(Account account){
         //create a connection
@@ -77,24 +77,6 @@ public class AccountDao {
         return null;
     }
 
-    //getAccount By password.
-    public Account getAccountByPassword(String password){
-        Connection conn = ConnectionUtil.getConnection();
-        try{
-            String strSql= "SELECT * FROM account WHERE password=?;";
-            PreparedStatement ps = conn.prepareStatement(strSql);
-            ps.setString(1, password);
-
-            ResultSet rs = ps.executeQuery();
-            while(rs.next()){
-                Account account = new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
-                return account;
-            }
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
 
     //getAccount by id
     public Account getAccountById(int id){
@@ -115,23 +97,4 @@ public class AccountDao {
         return null;
     }
 
-
-    public List<Account>getAllAccounts(){
-        Connection conn = ConnectionUtil.getConnection();
-        List<Account>accountList= new ArrayList<>();
-        try{
-            String sqlString = "SELECT * FROM account";
-            PreparedStatement preparedStatement = conn.prepareStatement(sqlString);
-
-            ResultSet rs = preparedStatement.executeQuery();
-            while(rs.next()){
-                Account accounts = new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
-                accountList.add(accounts);
-                return accountList;
-            }
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
 }
